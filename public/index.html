@@ -3,174 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nyara Luxe - Premium Home Décor</title>
+    <title>Nyara Luxe - Premium Interior Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
-        <div class="logo-container">
-            <div class="logo-icon">🏠💡</div>
-            <div class="logo-text">
-                <h1 class="brand-name">NAYARA</h1>
-                <span class="brand-subtext">LUXE</span>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="new logo.png" alt="Nyara Luxe Logo" class="logo-image">
+                </div>
+                <div class="logo-text">
+                    <h1>NAYARA</h1>
+                    <p>LUXE</p>
+                </div>
             </div>
+            <nav class="nav">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="#products" class="nav-link">Products</a>
+                <a href="/admin" class="nav-link">Admin</a>
+                <div class="theme-toggle-container">
+                    <label class="theme-toggle">
+                        <input type="checkbox" id="theme-toggle-checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </nav>
         </div>
-        <nav class="main-nav">
-            <ul>
-                <li><a href="#home" class="active">Home</a></li>
-                <li><a href="#products">Products</a></li>
-                <li><a href="#collections">Collections</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <!-- Admin Page Link -->
-                <li><a href="#admin" id="adminNavLink">Admin</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h2>Premium Home Décor Collection</h2>
-            <p>Elegant lighting and décor pieces for your living spaces</p>
-            <button class="cta-button">Explore Collections</button>
-        </div>
-    </section>
-
-    <!-- Products Section -->
-    <section class="products-section" id="products">
-        <div class="container">
-            <h2 class="section-title">Our Featured Products</h2>
-            <div class="filters">
-                <select id="categoryFilter">
-                    <option value="all">All Categories</option>
-                    <option value="chandeliers">Chandeliers</option>
-                    <option value="jhoomars">Jhoomars</option>
-                    <option value="wall-lights">Wall Lights</option>
-                    <option value="table-lamps">Table Lamps</option>
-                </select>
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-video-container">
+                <video class="hero-video" autoplay muted loop playsinline>
+                    <source src="/uploads/Business_Video_Creation_Request.mp4" type="video/mp4">
+                    <source src="Business_Video_Creation_Request.mp4" type="video/mp4">
+                </video>
+                <div class="hero-video-overlay"></div>
             </div>
-            
-            <div class="products-grid" id="productsGrid">
-                <!-- Product cards will be dynamically added here -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Admin Page Section -->
-    <section class="admin-section" id="admin" style="display: none;">
-        <div class="container">
-            <h2 class="section-title">Admin Dashboard</h2>
-            
-            <!-- Admin Navigation Tabs -->
-            <div class="admin-tabs">
-                <button class="tab-button active" data-tab="manage-products">Manage Products</button>
-                <button class="tab-button" data-tab="add-product">Add New Product</button>
-                <button class="tab-button" data-tab="settings">Settings</button>
-            </div>
-            
-            <!-- Tab Content -->
-            <div class="tab-content">
-                <!-- Manage Products Tab -->
-                <div class="tab-pane active" id="manage-products-tab">
-                    <h3>Existing Products</h3>
-                    <div class="admin-products-grid" id="adminProductsGrid">
-                        <!-- Existing products will be listed here -->
-                    </div>
+            <div class="hero-content-strip">
+                <div class="container">
+                    <h2 class="hero-title">Premium Interior Design</h2>
+                    <p class="hero-subtitle">Transform your space with elegance and style</p>
                 </div>
+            </div>
+        </section>
+
+        <section id="products" class="products-section">
+            <div class="container">
+                <h2 class="section-title">Our Collection</h2>
                 
-                <!-- Add Product Tab -->
-                <div class="tab-pane" id="add-product-tab">
-                    <h3>Add New Product</h3>
-                    <form id="productForm" class="admin-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="productName">Product Name:</label>
-                                <input type="text" id="productName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productCategory">Category:</label>
-                                <select id="productCategory" required>
-                                    <option value="">Select Category</option>
-                                    <option value="chandeliers">Chandeliers</option>
-                                    <option value="jhoomars">Jhoomars</option>
-                                    <option value="wall-lights">Wall Lights</option>
-                                    <option value="table-lamps">Table Lamps</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="productDescription">Description:</label>
-                            <textarea id="productDescription" rows="3" required></textarea>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="productPrice">Price (₹):</label>
-                                <input type="number" id="productPrice" min="0" step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productImage">Image Emoji/URL:</label>
-                                <input type="text" id="productImage" placeholder="Enter emoji or image URL">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="productDetails">Additional Details:</label>
-                            <textarea id="productDetails" rows="2"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="amazonLink">Amazon Link:</label>
-                            <input type="url" id="amazonLink" placeholder="https://www.amazon.in/product">
-                        </div>
-                        <div class="form-group">
-                            <label for="flipkartLink">Flipkart Link:</label>
-                            <input type="url" id="flipkartLink" placeholder="https://www.flipkart.com/product">
-                        </div>
-                        <button type="submit" class="btn-primary">Save Product</button>
-                        <button type="button" id="resetForm" class="btn-secondary">Reset</button>
-                    </form>
+                <div class="category-filter">
+                    <button class="filter-btn active" data-category="all">All Products</button>
+                    <button class="filter-btn" data-category="light">Light & Lamps</button>
+                    <button class="filter-btn" data-category="decors">Decors Showpieces</button>
+                    <button class="filter-btn" data-category="functional">Functional Mini Decor</button>
                 </div>
-                
-                <!-- Settings Tab -->
-                <div class="tab-pane" id="settings-tab">
-                    <h3>Admin Settings</h3>
-                    <div class="settings-form">
-                        <div class="form-group">
-                            <label for="adminUsername">Admin Username:</label>
-                            <input type="text" id="adminUsername" value="admin">
-                        </div>
-                        <div class="form-group">
-                            <label for="adminPassword">Change Password:</label>
-                            <input type="password" id="adminPassword" placeholder="Enter new password">
-                        </div>
-                        <button class="btn-primary">Save Settings</button>
-                    </div>
+
+                <div id="products-container" class="products-grid">
+                    <!-- Products will be loaded here -->
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- Buy Now Modal -->
-    <div id="buyNowModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Buy Now</h2>
-            <div class="ecommerce-options">
-                <p>Choose your preferred platform:</p>
-                <div class="platform-buttons">
-                    <a href="#" id="amazonLink" class="platform-link" target="_blank">
-                        <div class="platform-logo amazon">A</div>
-                        <span>Amazon</span>
-                    </a>
-                    <a href="#" id="flipkartLink" class="platform-link" target="_blank">
-                        <div class="platform-logo flipkart">F</div>
-                        <span>Flipkart</span>
-                    </a>
-                </div>
+    <!-- Ecommerce Platform Selection Modal -->
+    <div id="ecommerce-modal" class="ecommerce-modal">
+        <div class="ecommerce-modal-content" style="position: relative;">
+            <button class="close-ecommerce-modal" id="close-ecommerce-modal">&times;</button>
+            <h3 id="ecommerce-modal-title">Select Platform</h3>
+            <div id="ecommerce-platforms" class="ecommerce-platforms">
+                <!-- Platforms will be added here -->
             </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Nyara Luxe</h3>
+                    <p>Premium interior design solutions</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>F-65, Lane 3, Rajouri Garden</p>
+                    <p>New Delhi, 110027</p>
+                    <p>+91-9783597547</p>
+                    <p>+91-9079152336</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Nyara Luxe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>

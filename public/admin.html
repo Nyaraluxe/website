@@ -4,19 +4,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Nyara Luxe</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Admin Panel</h1>
-        <p>This is a placeholder for the admin panel. The original file was missing.</p>
-        <div id="login-form">
-            <h2>Login</h2>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
-            <button onclick="login()">Login</button>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Admin Login</h2>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <div id="login-error" class="error-message"></div>
+            </form>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-panel" style="display: none;">
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="/logo.png" alt="Nyara Luxe Logo" class="logo-image">
+                    </div>
+                    <div class="logo-text">
+                        <h1>NAYARA</h1>
+                        <p>LUXE</p>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <a href="/" class="view-site-btn" target="_blank">View Site</a>
+                    <button id="logout-btn" class="logout-btn">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <div class="admin-container">
+                <div class="admin-sidebar">
+                    <h3>Product Management</h3>
+                    <div class="category-selector">
+                        <label for="category-dropdown">Select Category:</label>
+                        <select id="category-dropdown" class="category-dropdown">
+                            <option value="light">Light & Lamps</option>
+                            <option value="decors">Decors Showpieces</option>
+                            <option value="functional">Functional Mini Decor</option>
+                        </select>
+                    </div>
+                    <button id="add-product-btn" class="add-product-btn">+ Add New Product</button>
+                </div>
+
+                <div class="admin-content">
+                    <h2 id="current-category-title">Light & Lamps Products</h2>
+                    <div id="products-list" class="products-list">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="product-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Product</h2>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <form id="product-form" class="product-form">
+                <input type="hidden" id="product-id" name="id">
+                
+                <div class="form-group">
+                    <label for="product-name">Product Name *</label>
+                    <input type="text" id="product-name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-sku">SKU (Stock Keeping Unit) *</label>
+                    <input type="text" id="product-sku" name="sku" required>
+                    <small>Unique identifier for this product</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-description">Description</label>
+                    <textarea id="product-description" name="description" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-price">Price (₹)</label>
+                    <input type="number" id="product-price" name="price" min="0" step="0.01">
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Images/Videos</label>
+                    <input type="file" id="file-input" multiple accept="image/*,video/*" style="display: none;">
+                    <button type="button" id="select-files-btn" class="upload-btn">Select Files</button>
+                    <small>You can upload multiple images or videos. Images can be cropped after selection.</small>
+                    
+                    <div id="upload-preview" class="upload-preview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-amazon-link">Amazon Link</label>
+                    <input type="url" id="product-amazon-link" name="amazonLink" placeholder="https://amazon.in/...">
+                    <small>Link to product on Amazon</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-flipkart-link">Flipkart Link</label>
+                    <input type="url" id="product-flipkart-link" name="flipkartLink" placeholder="https://flipkart.com/...">
+                    <small>Link to product on Flipkart</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-meesho-link">Meesho Link</label>
+                    <input type="url" id="product-meesho-link" name="meeshoLink" placeholder="https://meesho.com/...">
+                    <small>Link to product on Meesho</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" id="cancel-btn">Cancel</button>
+                    <button type="submit" class="save-btn">Save Product</button>
+                </div>
+                
+                <div id="form-error" class="error-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cropper Modal - Separate Dialog -->
+    <div id="cropper-modal" class="cropper-modal" style="display: none;">
+        <div class="cropper-modal-content">
+            <div class="cropper-header">
+                <h3 id="cropper-title">Crop Images</h3>
+                <button type="button" class="close-cropper" id="close-cropper">&times;</button>
+            </div>
+            <div class="cropper-body">
+                <div class="cropper-carousel-container">
+                    <button class="cropper-nav-btn cropper-prev-btn" id="cropper-prev">‹</button>
+                    <div class="cropper-image-wrapper">
+                        <img id="cropper-image" src="" alt="Crop">
+                    </div>
+                    <button class="cropper-nav-btn cropper-next-btn" id="cropper-next">›</button>
+                </div>
+                <div class="cropper-indicators-wrapper">
+                    <div id="cropper-indicators" class="cropper-indicators-list"></div>
+                </div>
+            </div>
+            <div class="cropper-actions">
+                <div class="cropper-actions-left">
+                    <button type="button" class="skip-crop-btn" id="skip-crop">Skip This Image</button>
+                    <button type="button" class="cancel-crop-btn" id="cancel-crop">Cancel All</button>
+                </div>
+                <div class="cropper-actions-right">
+                    <button type="button" class="apply-crop-btn" id="apply-crop">Apply Crop</button>
+                    <button type="button" class="done-crop-btn" id="done-crop" style="display: none;">Done & Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="admin.js"></script>
 </body>
 </html>

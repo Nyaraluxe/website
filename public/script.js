@@ -1,319 +1,483 @@
-// Sample product data with Amazon and Flipkart links
-let products = [
-  {
-    id: 1,
-    name: "Crystal Chandelier",
-    category: "chandeliers",
-    description: "Elegant crystal chandelier with brass frame for dining rooms",
-    price: 12500,
-    image: "💎",
-    details: "Height: 60cm, Diameter: 50cm, Material: Crystal & Brass",
-    amazonLink: "https://www.amazon.in/chandelier/dp/example1",
-    flipkartLink: "https://www.flipkart.com/chandelier/p/example1"
-  },
-  {
-    id: 2,
-    name: "Traditional Jhoomar",
-    category: "jhoomars",
-    description: "Handcrafted traditional jhoomar with intricate detailing",
-    price: 8500,
-    image: "🏮",
-    details: "Height: 45cm, Diameter: 35cm, Material: Metal & Glass",
-    amazonLink: "https://www.amazon.in/jhoomar/dp/example2",
-    flipkartLink: "https://www.flipkart.com/jhoomar/p/example2"
-  },
-  {
-    id: 3,
-    name: "Modern Wall Light",
-    category: "wall-lights",
-    description: "Contemporary wall light with LED bulbs",
-    price: 4200,
-    image: "💡",
-    details: "Width: 30cm, Projection: 15cm, Material: Stainless Steel",
-    amazonLink: "https://www.amazon.in/wall-light/dp/example3",
-    flipkartLink: "https://www.flipkart.com/wall-light/p/example3"
-  },
-  {
-    id: 4,
-    name: "Marble Table Lamp",
-    category: "table-lamps",
-    description: "Luxurious marble base table lamp with fabric shade",
-    price: 5800,
-    image: "🪔",
-    details: "Height: 50cm, Base: Marble, Shade: Linen Fabric",
-    amazonLink: "https://www.amazon.in/table-lamp/dp/example4",
-    flipkartLink: "https://www.flipkart.com/table-lamp/p/example4"
-  },
-  {
-    id: 5,
-    name: "Antique Brass Chandelier",
-    category: "chandeliers",
-    description: "Vintage style brass chandelier with candle lights",
-    price: 15600,
-    image: "🕯️",
-    details: "Height: 70cm, Diameter: 60cm, Material: Antique Brass",
-    amazonLink: "https://www.amazon.in/brass-chandelier/dp/example5",
-    flipkartLink: "https://www.flipkart.com/brass-chandelier/p/example5"
-  },
-  {
-    id: 6,
-    name: "Rajasthani Jhoomar",
-    category: "jhoomars",
-    description: "Colorful Rajasthani handcrafted jhoomar",
-    price: 9200,
-    image: "🎨",
-    details: "Height: 50cm, Diameter: 40cm, Material: Wood & Glass",
-    amazonLink: "https://www.amazon.in/rajasthani-jhoomar/dp/example6",
-    flipkartLink: "https://www.flipkart.com/rajasthani-jhoomar/p/example6"
-  }
-];
+const API_BASE = '/api';
 
-let currentProductId = products.length;
+let allProducts = {};
+let currentCategory = 'all';
 
-// DOM Elements
-const productsGrid = document.getElementById('productsGrid');
-const categoryFilter = document.getElementById('categoryFilter');
-const adminSection = document.getElementById('admin');
-const adminNavLink = document.getElementById('adminNavLink');
-const adminProductsGrid = document.getElementById('adminProductsGrid');
-const productForm = document.getElementById('productForm');
-const closeButtons = document.querySelectorAll('.close');
-const buyNowModal = document.getElementById('buyNowModal');
-const resetFormBtn = document.getElementById('resetForm');
-
-// Tab navigation
-const tabButtons = document.querySelectorAll('.tab-button');
-const tabPanes = document.querySelectorAll('.tab-pane');
-
-// Initialize the page
-document.addEventListener('DOMContentLoaded', function() {
-  renderProducts(products);
-  renderAdminProducts();
-  setupEventListeners();
+// Load products on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadProducts();
+    setupCategoryFilters();
+    setupDarkMode();
+    setupEcommerceModal();
 });
 
-// Render products based on filter
-function renderProducts(productsToRender) {
-  productsGrid.innerHTML = '';
-  
-  if (productsToRender.length === 0) {
-    productsGrid.innerHTML = '<p class="no-products">No products found in this category.</p>';
-    return;
-  }
-  
-  productsToRender.forEach(product => {
-    const productCard = document.createElement('div');
-    productCard.className = 'product-card';
-    productCard.innerHTML = `
-      <div class="product-image">${product.image}</div>
-      <div class="product-info">
-        <div class="product-category">${product.category.replace('-', ' ')}</div>
-        <h3 class="product-name">${product.name}</h3>
-        <p class="product-description">${product.description}</p>
-        <div class="product-price">₹${product.price.toLocaleString()}</div>
-        <button class="buy-now-btn" data-id="${product.id}">Buy Now</button>
-      </div>
-    `;
-    productsGrid.appendChild(productCard);
-  });
-  
-  // Add event listeners to Buy Now buttons
-  document.querySelectorAll('.buy-now-btn').forEach(button => {
-    button.addEventListener('click', function() {
-      const productId = this.getAttribute('data-id');
-      openBuyNowModal(productId);
-    });
-  });
-}
-
-// Filter products by category
-categoryFilter.addEventListener('change', function() {
-  const selectedCategory = this.value;
-  
-  if (selectedCategory === 'all') {
-    renderProducts(products);
-  } else {
-    const filteredProducts = products.filter(product => product.category === selectedCategory);
-    renderProducts(filteredProducts);
-  }
-});
-
-// Setup event listeners
-function setupEventListeners() {
-  // Close modals
-  closeButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      buyNowModal.style.display = 'none';
-    });
-  });
-  
-  // Close modals when clicking outside
-  window.addEventListener('click', function(event) {
-    if (event.target === buyNowModal) {
-      buyNowModal.style.display = 'none';
+// Load all products
+async function loadProducts() {
+    try {
+        const response = await fetch(`${API_BASE}/products`);
+        allProducts = await response.json();
+        displayProducts();
+    } catch (error) {
+        console.error('Error loading products:', error);
+        showEmptyState();
     }
-  });
-  
-  // Admin navigation
-  adminNavLink.addEventListener('click', function(e) {
-    e.preventDefault();
-    document.querySelectorAll('.main-nav a').forEach(link => link.classList.remove('active'));
-    this.classList.add('active');
-    document.getElementById('products').style.display = 'none';
-    adminSection.style.display = 'block';
-  });
-  
-  // Tab navigation
-  tabButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const tabId = this.getAttribute('data-tab');
-      
-      // Update active tab button
-      tabButtons.forEach(btn => btn.classList.remove('active'));
-      this.classList.add('active');
-      
-      // Show active tab pane
-      tabPanes.forEach(pane => pane.classList.remove('active'));
-      document.getElementById(`${tabId}-tab`).classList.add('active');
+}
+
+// Setup category filter buttons
+function setupCategoryFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active state
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Update current category
+            currentCategory = btn.dataset.category;
+            displayProducts();
+        });
     });
-  });
-  
-  // Handle product form submission
-  productForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    saveProduct();
-  });
-  
-  // Reset form
-  resetFormBtn.addEventListener('click', function() {
-    productForm.reset();
-  });
 }
 
-// Save product (add or update)
-function saveProduct() {
-  const productName = document.getElementById('productName').value;
-  const productCategory = document.getElementById('productCategory').value;
-  const productDescription = document.getElementById('productDescription').value;
-  const productPrice = document.getElementById('productPrice').value;
-  const productImage = document.getElementById('productImage').value || '🪙';
-  const productDetails = document.getElementById('productDetails').value;
-  const amazonLink = document.getElementById('amazonLink').value || '#';
-  const flipkartLink = document.getElementById('flipkartLink').value || '#';
-  
-  // In a real app, we would save to a database
-  // For now, we'll just add to our array
-  const newProduct = {
-    id: ++currentProductId,
-    name: productName,
-    category: productCategory,
-    description: productDescription,
-    price: parseFloat(productPrice),
-    image: productImage,
-    details: productDetails,
-    amazonLink: amazonLink,
-    flipkartLink: flipkartLink
-  };
-  
-  products.push(newProduct);
-  renderProducts(products);
-  renderAdminProducts();
-  
-  // Reset form
-  productForm.reset();
-  alert('Product saved successfully!');
-  
-  // Switch to manage products tab
-  document.querySelector('[data-tab="manage-products"]').click();
+// Display products based on current filter
+function displayProducts() {
+    const container = document.getElementById('products-container');
+    
+    if (!container) return;
+    
+    // Get products to display
+    let productsToShow = [];
+    
+    if (currentCategory === 'all') {
+        // Show all products from all categories
+        Object.values(allProducts.categories || {}).forEach(categoryProducts => {
+            productsToShow.push(...categoryProducts);
+        });
+    } else {
+        productsToShow = allProducts.categories[currentCategory] || [];
+    }
+    
+    if (productsToShow.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <h3>No Products Found</h3>
+                <p>Check back soon for new additions to our collection.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Render products
+    container.innerHTML = productsToShow.map(product => createProductCard(product)).join('');
+    
+    // Attach event listeners to Buy Now buttons
+    attachBuyNowListeners();
 }
 
-// Render products in admin panel
-function renderAdminProducts() {
-  adminProductsGrid.innerHTML = '';
-  
-  products.forEach(product => {
-    const productCard = document.createElement('div');
-    productCard.className = 'admin-product-card';
-    productCard.innerHTML = `
-      <h4>${product.name}</h4>
-      <p>Category: ${product.category.replace('-', ' ')}</p>
-      <p>Price: ₹${product.price.toLocaleString()}</p>
-      <div class="admin-product-actions">
-        <button class="edit-btn" data-id="${product.id}">Edit</button>
-        <button class="delete-btn" data-id="${product.id}">Delete</button>
-      </div>
+// Create product card HTML
+function createProductCard(product) {
+    // Handle media (images/videos) - support both old 'image' and new 'media' array
+    const media = product.media && product.media.length > 0 
+        ? product.media 
+        : (product.image ? [product.image] : []);
+    
+    let mediaHtml = '';
+    if (media.length === 0) {
+        mediaHtml = `<div class="product-image-placeholder">🏠</div>`;
+    } else if (media.length === 1) {
+        const isVideo = media[0].includes('.mp4') || media[0].includes('.mov') || media[0].includes('.avi') || media[0].includes('.webm');
+        if (isVideo) {
+            mediaHtml = `<video src="${media[0]}" autoplay muted loop playsinline onerror="this.parentElement.innerHTML='<div class=\'product-image-placeholder\'>🏠</div>'"></video>`;
+        } else {
+            mediaHtml = `<img src="${media[0]}" alt="${product.name}" onerror="this.parentElement.innerHTML='<div class=\'product-image-placeholder\'>🏠</div>'">`;
+        }
+    } else {
+        // Multiple media - create carousel (only show nav if more than 1 item)
+        const showNav = media.length > 1;
+        mediaHtml = `
+            <div class="product-carousel" data-product-id="${product.id}">
+                <div class="carousel-container">
+                    ${media.map((url, index) => {
+                        const isVideo = url.includes('.mp4') || url.includes('.mov') || url.includes('.avi') || url.includes('.webm');
+                        return `
+                            <div class="carousel-slide ${index === 0 ? 'active' : ''}">
+                                ${isVideo 
+                                    ? `<video src="${url}" autoplay muted loop playsinline></video>`
+                                    : `<img src="${url}" alt="${product.name}">`
+                                }
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                ${showNav ? `
+                    <button class="carousel-nav carousel-prev" onclick="changeCarouselSlide('${product.id}', -1)">‹</button>
+                    <button class="carousel-nav carousel-next" onclick="changeCarouselSlide('${product.id}', 1)">›</button>
+                    <div class="carousel-indicators">
+                        ${media.map((_, index) => `
+                            <span class="carousel-indicator ${index === 0 ? 'active' : ''}" onclick="goToCarouselSlide('${product.id}', ${index})"></span>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+    
+    return `
+        <div class="product-card" data-category="${product.category || 'all'}">
+            <div class="product-image">
+                ${mediaHtml}
+            </div>
+            <div class="product-info">
+                <div class="product-category">${(product.category || 'Uncategorized').toUpperCase()}</div>
+                <h3 class="product-name">${product.name || 'Product Name'}</h3>
+                <p class="product-description">${product.description || 'Premium interior design piece'}</p>
+                ${product.price ? `<div class="product-price">₹${product.price}</div>` : ''}
+                <div class="product-actions">
+                    <button class="buy-now-btn" 
+                        data-product-id="${product.id}" 
+                        data-amazon-link="${product.amazonLink || ''}"
+                        data-flipkart-link="${product.flipkartLink || ''}"
+                        data-meesho-link="${product.meeshoLink || ''}"
+                        data-product-name="${product.name || 'Product'}">
+                        Buy Now
+                    </button>
+                    <button class="help-btn" 
+                        data-product-id="${product.id}" 
+                        data-product-name="${product.name || 'Product'}"
+                        data-product-sku="${product.sku || ''}">
+                        May I Help?
+                    </button>
+                </div>
+            </div>
+        </div>
     `;
-    adminProductsGrid.appendChild(productCard);
-  });
-  
-  // Add event listeners to edit and delete buttons
-  document.querySelectorAll('.edit-btn').forEach(button => {
-    button.addEventListener('click', function() {
-      const productId = parseInt(this.getAttribute('data-id'));
-      editProduct(productId);
+}
+
+// Attach Buy Now button listeners
+function attachBuyNowListeners() {
+    // Buy Now buttons
+    const buyButtons = document.querySelectorAll('.buy-now-btn');
+    buyButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const amazonLink = btn.dataset.amazonLink;
+            const flipkartLink = btn.dataset.flipkartLink;
+            const meeshoLink = btn.dataset.meeshoLink;
+            const productName = btn.dataset.productName;
+            
+            // Show ecommerce platform selection modal - only show platforms with links
+            showEcommerceModal(amazonLink, flipkartLink, meeshoLink, productName);
+        });
     });
-  });
-  
-  document.querySelectorAll('.delete-btn').forEach(button => {
-    button.addEventListener('click', function() {
-      const productId = parseInt(this.getAttribute('data-id'));
-      deleteProduct(productId);
+    
+    // Help buttons
+    const helpButtons = document.querySelectorAll('.help-btn');
+    helpButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const productId = btn.dataset.productId;
+            const productName = btn.dataset.productName;
+            const productSku = btn.dataset.productSku;
+            
+            // Show help form modal
+            showHelpFormModal(productId, productName, productSku);
+        });
     });
-  });
 }
 
-// Edit product
-function editProduct(productId) {
-  const product = products.find(p => p.id === productId);
-  
-  if (product) {
-    // Switch to add product tab
-    document.querySelector('[data-tab="add-product"]').click();
+// Carousel functions
+window.changeCarouselSlide = function(productId, direction) {
+    const carousel = document.querySelector(`.product-carousel[data-product-id="${productId}"]`);
+    if (!carousel) return;
     
-    // Fill form with product data
-    document.getElementById('productName').value = product.name;
-    document.getElementById('productCategory').value = product.category;
-    document.getElementById('productDescription').value = product.description;
-    document.getElementById('productPrice').value = product.price;
-    document.getElementById('productImage').value = product.image;
-    document.getElementById('productDetails').value = product.details;
-    document.getElementById('amazonLink').value = product.amazonLink;
-    document.getElementById('flipkartLink').value = product.flipkartLink;
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const indicators = carousel.querySelectorAll('.carousel-indicator');
+    let currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active'));
     
-    // Scroll to form
-    document.querySelector('#add-product-tab').scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-// Delete product
-function deleteProduct(productId) {
-  if (confirm('Are you sure you want to delete this product?')) {
-    products = products.filter(product => product.id !== productId);
-    renderProducts(products);
-    renderAdminProducts();
-  }
-}
-
-// Open Buy Now modal
-function openBuyNowModal(productId) {
-  const product = products.find(p => p.id === parseInt(productId));
-  
-  if (product) {
-    // Set the links for Amazon and Flipkart
-    document.getElementById('amazonLink').href = product.amazonLink;
-    document.getElementById('flipkartLink').href = product.flipkartLink;
+    slides[currentIndex].classList.remove('active');
+    indicators[currentIndex].classList.remove('active');
     
-    buyNowModal.style.display = 'block';
-  }
+    currentIndex += direction;
+    if (currentIndex < 0) currentIndex = slides.length - 1;
+    if (currentIndex >= slides.length) currentIndex = 0;
+    
+    slides[currentIndex].classList.add('active');
+    indicators[currentIndex].classList.add('active');
+};
+
+window.goToCarouselSlide = function(productId, index) {
+    const carousel = document.querySelector(`.product-carousel[data-product-id="${productId}"]`);
+    if (!carousel) return;
+    
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const indicators = carousel.querySelectorAll('.carousel-indicator');
+    
+    slides.forEach(slide => slide.classList.remove('active'));
+    indicators.forEach(indicator => indicator.classList.remove('active'));
+    
+    slides[index].classList.add('active');
+    indicators[index].classList.add('active');
+};
+
+// Show ecommerce platform selection modal
+function showEcommerceModal(amazonLink, flipkartLink, meeshoLink, productName) {
+    const modal = document.getElementById('ecommerce-modal');
+    const modalTitle = document.getElementById('ecommerce-modal-title');
+    const platformsContainer = document.getElementById('ecommerce-platforms');
+    
+    modalTitle.textContent = `Buy ${productName}`;
+    
+    // Clear previous platforms
+    platformsContainer.innerHTML = '';
+    
+    let hasLinks = false;
+    
+    // Add Amazon if available
+    if (amazonLink) {
+        hasLinks = true;
+        const amazonBtn = document.createElement('a');
+        amazonBtn.href = amazonLink;
+        amazonBtn.target = '_blank';
+        amazonBtn.className = 'ecommerce-platform-btn';
+        amazonBtn.innerHTML = `
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" onerror="this.outerHTML='<span>Buy on Amazon</span>'">
+            <span>Buy on Amazon</span>
+        `;
+        platformsContainer.appendChild(amazonBtn);
+    }
+    
+    // Add Flipkart if available
+    if (flipkartLink) {
+        hasLinks = true;
+        const flipkartBtn = document.createElement('a');
+        flipkartBtn.href = flipkartLink;
+        flipkartBtn.target = '_blank';
+        flipkartBtn.className = 'ecommerce-platform-btn';
+        flipkartBtn.innerHTML = `
+            <img src="https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/flipkart-plus_8d85f4.png" alt="Flipkart" onerror="this.outerHTML='<span>Buy on Flipkart</span>'">
+            <span>Buy on Flipkart</span>
+        `;
+        platformsContainer.appendChild(flipkartBtn);
+    }
+    
+    // Add Meesho if available
+    if (meeshoLink) {
+        hasLinks = true;
+        const meeshoBtn = document.createElement('a');
+        meeshoBtn.href = meeshoLink;
+        meeshoBtn.target = '_blank';
+        meeshoBtn.className = 'ecommerce-platform-btn';
+        meeshoBtn.innerHTML = `
+            <img src="https://images.meesho.com/images/pow/meesho-logo.png" alt="Meesho" onerror="this.outerHTML='<span>Buy on Meesho</span>'">
+            <span>Buy on Meesho</span>
+        `;
+        platformsContainer.appendChild(meeshoBtn);
+    }
+    
+    // If no links available
+    if (!hasLinks) {
+        platformsContainer.innerHTML = '<p style="color: var(--text-secondary);">No purchase links available. Please contact us for orders.</p>';
+    }
+    
+    modal.classList.add('show');
 }
 
-// Navigation between sections
-document.querySelectorAll('.main-nav a:not(#adminNavLink)').forEach(link => {
-  link.addEventListener('click', function(e) {
+// Setup ecommerce modal
+function setupEcommerceModal() {
+    const modal = document.getElementById('ecommerce-modal');
+    const closeBtn = document.getElementById('close-ecommerce-modal');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+    }
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target.id === 'ecommerce-modal') {
+            modal.classList.remove('show');
+        }
+    });
+}
+
+// Dark mode functionality
+function setupDarkMode() {
+    const themeToggle = document.getElementById('theme-toggle-checkbox');
+    
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (themeToggle) themeToggle.checked = true;
+    }
+    
+    // Toggle theme
+    if (themeToggle) {
+        themeToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    }
+}
+
+// Show empty state
+function showEmptyState() {
+    const container = document.getElementById('products-container');
+    if (container) {
+        container.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+                <h3>Loading Products...</h3>
+                <p>Please wait while we load our collection.</p>
+            </div>
+        `;
+    }
+}
+
+// Show help form modal
+function showHelpFormModal(productId, productName, productSku) {
+    // Create or update the help modal
+    let helpModal = document.getElementById('help-modal');
+    if (!helpModal) {
+        helpModal = document.createElement('div');
+        helpModal.id = 'help-modal';
+        helpModal.className = 'help-modal';
+        helpModal.innerHTML = `
+            <div class="help-modal-content">
+                <button class="close-help-modal">&times;</button>
+                <h3>Need Help with This Product?</h3>
+                <div class="help-product-info">
+                    <h4 id="help-product-name"></h4>
+                </div>
+                <form id="help-form" class="help-form">
+                    <input type="hidden" id="help-product-id" name="productId">
+                    <input type="hidden" id="help-product-sku-hidden" name="productSku">
+                    <div class="form-group">
+                        <label for="help-name">Your Name *</label>
+                        <input type="text" id="help-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="help-email">Email Address *</label>
+                        <input type="email" id="help-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="help-query">Your Query *</label>
+                        <textarea id="help-query" name="query" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-help-btn">Submit Query</button>
+                </form>
+                <div id="help-form-message" class="help-form-message"></div>
+            </div>
+        `;
+        document.body.appendChild(helpModal);
+        
+        // Add event listeners
+        helpModal.querySelector('.close-help-modal').addEventListener('click', () => {
+            helpModal.style.display = 'none';
+        });
+        
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) {
+                helpModal.style.display = 'none';
+            }
+        });
+        
+        // Form submission
+        helpModal.querySelector('#help-form').addEventListener('submit', submitHelpForm);
+    }
+    
+    // Populate form with product info
+    document.getElementById('help-product-id').value = productId;
+    document.getElementById('help-product-sku-hidden').value = productSku; // Hidden SKU field
+    document.getElementById('help-product-name').textContent = productName;
+    
+    // Reset form and message
+    document.getElementById('help-form').reset();
+    document.getElementById('help-form-message').textContent = '';
+    document.getElementById('help-form-message').className = 'help-form-message';
+    
+    // Show modal
+    helpModal.style.display = 'flex';
+}
+
+// Submit help form
+async function submitHelpForm(e) {
     e.preventDefault();
-    document.querySelectorAll('.main-nav a').forEach(l => l.classList.remove('active'));
-    this.classList.add('active');
-    adminSection.style.display = 'none';
-    document.getElementById('products').style.display = 'block';
-  });
+    
+    const form = e.target;
+    const messageDiv = document.getElementById('help-form-message');
+    const submitBtn = form.querySelector('.submit-help-btn');
+    
+    // Get form data
+    const formData = new FormData(form);
+    const data = {
+        productId: formData.get('productId'),
+        productName: document.getElementById('help-product-name').textContent,
+        productSku: formData.get('productSku'), // Get SKU from hidden field
+        name: formData.get('name'),
+        email: formData.get('email'),
+        query: formData.get('query'),
+        timestamp: new Date().toISOString()
+    };
+    
+    // Disable submit button and show loading
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+    messageDiv.textContent = '';
+    messageDiv.className = 'help-form-message';
+    
+    try {
+        // Send data to server
+        const response = await fetch('/api/help-request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+            // Show success message
+            messageDiv.textContent = result.message;
+            messageDiv.className = 'help-form-message success';
+            
+            // Reset form after success
+            form.reset();
+            
+            // Close modal after delay
+            setTimeout(() => {
+                document.getElementById('help-modal').style.display = 'none';
+            }, 3000);
+        } else {
+            throw new Error(result.message || 'Failed to submit query');
+        }
+    } catch (error) {
+        console.error('Error submitting help form:', error);
+        messageDiv.textContent = error.message || 'Sorry, there was an error submitting your query. Please try again.';
+        messageDiv.className = 'help-form-message error';
+    } finally {
+        // Re-enable submit button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Query';
+    }
+}
+
+// Smooth scroll for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
 });
+
