@@ -995,6 +995,27 @@ body {
     grid-template-columns: 1fr;
     gap: 3rem;
     padding: 5rem 0;
+    justify-items: center;
+}
+
+.about-text {
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.values-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.values-list li {
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 500;
 }
 
 .brand-story {
