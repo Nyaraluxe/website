@@ -9,6 +9,8 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const { google } = require('googleapis');
 const mongoose = require('mongoose');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 // Import Models
 const Product = require('./models/Product');
@@ -29,42 +31,30 @@ if (MONGODB_URI) {
   console.warn('MONGODB_URI is not defined. Database features will not work.');
 }
 
-// Configure multer for file uploads (Note: This still saves locally, which is ephemeral on Vercel)
-const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
-    const uploadDir = path.join(__dirname, 'public', 'uploads');
-    try {
-      await fs.mkdir(uploadDir, { recursive: true });
-    } catch (error) {
-      // Directory already exists
-    }
-    cb(null, uploadDir);
+// Configure Cloudinary
+if (process.env.CLOUDINARY_URL) {
+  console.log('Cloudinary configured');
+} else {
+  console.warn('CLOUDINARY_URL not found. Image uploads may fail.');
+}
+
+// Configure Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'nyara-luxe-uploads',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'mp4', 'mov', 'avi', 'webm'],
+    resource_type: 'auto', // Allow both images and videos
   },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-  }
 });
 
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif|webp|mp4|mov|avi|webm/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-    if (extname && mimetype) {
-      return cb(null, true);
-    }
-    cb(new Error('Invalid file type. Only images and videos are allowed.'));
-  }
-});
+const upload = multer({ storage: storage });
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
+// We don't need to serve /uploads locally anymore, but keeping it won't hurt for old files
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // Google Sheets configuration
@@ -233,7 +223,8 @@ app.post('/api/upload', verifyToken, upload.array('files', 10), async (req, res)
       return res.status(400).json({ error: 'No files uploaded' });
     }
 
-    const fileUrls = req.files.map(file => `/uploads/${file.filename}`);
+    // Cloudinary returns the URL in file.path
+    const fileUrls = req.files.map(file => file.path);
     res.json({ urls: fileUrls, message: 'Files uploaded successfully' });
   } catch (error) {
     console.error('Upload error:', error);
