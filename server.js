@@ -53,8 +53,8 @@ const upload = multer({ storage: storage });
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('public'));
-// We don't need to serve /uploads locally anymore, but keeping it won't hurt for old files
+// Use absolute path for static files to ensure Vercel finds them
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // Google Sheets configuration
