@@ -30,6 +30,10 @@ if (!cached) {
 }
 
 async function connectDB() {
+  if (!MONGODB_URI) {
+    throw new Error('MONGODB_URI environment variable is not defined. Please check your .env file or Vercel project settings.');
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
