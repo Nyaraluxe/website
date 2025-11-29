@@ -938,9 +938,9 @@ body {
 
 .about-title {
     font-family: "Cormorant Garamond", serif;
-    font-size: 4.5rem; /* Larger, more dramatic */
+    font-size: 3.5rem; /* Reduced for elegance */
     font-weight: 600;
-    color: #2C3325; /* Darker than deep-olive for max contrast */
+    color: #2C3325;
     margin-bottom: 1.5rem;
     line-height: 1.1;
     letter-spacing: -0.02em;
@@ -949,9 +949,9 @@ body {
 
 .about-subtitle {
     font-family: "Lato", sans-serif;
-    font-size: 1.4rem;
-    color: #464C3C; /* Deep Olive for readability */
-    font-weight: 500; /* Increased weight */
+    font-size: 1.25rem; /* Reduced for elegance */
+    color: #464C3C;
+    font-weight: 500;
     max-width: 750px;
     margin: 0 auto;
     line-height: 1.6;
