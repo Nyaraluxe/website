@@ -904,6 +904,7 @@ body {
         font-size: 1rem;
     }
 }
+
 /* About Us Page Styles */
 
 .about-hero {
@@ -911,7 +912,8 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    padding: 10rem 0; /* Increased padding for more breathing room */
+    padding: 10rem 0 12rem 0;
+    /* Increased padding for more breathing room */
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -924,8 +926,10 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(245, 243, 240, 0.6); /* Stronger, warmer overlay for readability */
-    backdrop-filter: blur(2px); /* Subtle blur to soften background */
+    background: rgba(245, 243, 240, 0.6);
+    /* Stronger, warmer overlay for readability */
+    backdrop-filter: blur(2px);
+    /* Subtle blur to soften background */
     z-index: 1;
 }
 
@@ -938,7 +942,8 @@ body {
 
 .about-title {
     font-family: "Cormorant Garamond", serif;
-    font-size: 3.5rem; /* Reduced for elegance */
+    font-size: 3.5rem;
+    /* Reduced for elegance */
     font-weight: 600;
     color: #2C3325;
     margin-bottom: 1.5rem;
@@ -949,7 +954,8 @@ body {
 
 .about-subtitle {
     font-family: "Lato", sans-serif;
-    font-size: 1.25rem; /* Reduced for elegance */
+    font-size: 1.25rem;
+    /* Reduced for elegance */
     color: #464C3C;
     font-weight: 500;
     max-width: 750px;
@@ -991,16 +997,19 @@ body {
     font-size: 1.5rem;
     color: var(--taupe-sand);
 }
+
+.about-text {
     text-align: center;
     max-width: 800px;
     margin: 0 auto;
+    padding: 2.5rem 0;
 }
 
 .story-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 2.5rem;
     color: var(--text-primary);
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 
 .story-content {
@@ -1015,96 +1024,179 @@ body {
 
 .values-section {
     background-color: var(--bg-secondary);
-    padding: 5rem 0;
-    margin: 4rem 0;
+    padding: 2.5rem 0;
+    margin: 1.5rem 0;
 }
 
+/* Our Values - Grid of boxes with descriptions */
 .values-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
 }
 
 .value-card {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    padding: 2rem;
+    background: linear-gradient(135deg, rgba(227, 225, 222, 0.5), rgba(208, 203, 193, 0.4));
+    border-radius: 20px;
+    padding: 1.5rem 1rem;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 .value-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-.value-icon {
-    font-size: 2rem;
+.value-card h3 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.7rem;
+    color: var(--deep-olive);
     margin-bottom: 1rem;
-    color: var(--accent-color);
+    font-weight: 600;
 }
 
-.value-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-}
-
-.value-description {
+.value-card p {
+    font-family: "Lato", sans-serif;
     color: var(--text-secondary);
     line-height: 1.6;
+    font-size: 1.05rem;
 }
 
-/* Vision Section */
+/* Our Vision - Simple boxes */
+.vision-points {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+}
+
+.vision-point {
+    background: linear-gradient(135deg, rgba(227, 225, 222, 0.5), rgba(208, 203, 193, 0.4));
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    min-width: 220px;
+}
+
+.vision-point:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.vision-point h3 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin: 0;
+    font-weight: 600;
+}
+
+.point-icon {
+    font-size: 2rem;
+    color: var(--muted-moss);
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* About Nyara values list - Convert to boxes */
+.values-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+}
+
+.values-list li {
+    background: linear-gradient(135deg, rgba(227, 225, 222, 0.5), rgba(208, 203, 193, 0.4));
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--deep-olive);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    min-width: 280px;
+}
+
+.values-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.values-list li::before {
+    content: "✦";
+    font-size: 1.0rem;
+    color: var(--taupe-sand);
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Vision Section Specifics */
 .vision-section {
     background-color: var(--bg-secondary);
-    padding: 5rem 0;
-    margin: 4rem 0;
+    padding: 1.5rem 0;
+    margin: 1rem 0;
+    position: relative;
+    overflow: hidden;
 }
 
 .vision-content {
     max-width: 1200px;
     margin: 0 auto;
     text-align: center;
-    font-size: 1.1rem;
-    line-height: 1.8;
 }
 
-.vision-content > p {
-    margin-bottom: 1.5rem;
+.vision-content>p {
+    font-family: "Lato", sans-serif;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
-.vision-points {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    margin: 2rem 0;
-    flex-wrap: nowrap;
+margin-left: auto;
+margin-right: auto;
 }
 
-.vision-point {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1.5rem;
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    min-width: 0;
+background: rgba(255, 255, 255, 0.5);
+border-radius: 50%;
+box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+transition: all 0.3s ease;
 }
 
-.vision-point:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+.vision-point:hover .point-icon {
+    background: #fff;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+    color: var(--muted-moss);
 }
 
-.point-icon {
+.vision-point h3 {
+    font-family: "Cormorant Garamond", serif;
     font-size: 1.5rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+color: var(--deep-olive);
+font-weight: 600;
+margin: 0;
 }
 
 /* Founder Section */
@@ -1141,6 +1233,7 @@ body {
         opacity: 0;
         transform: translateY(30px);
     }
+
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -1164,6 +1257,7 @@ body {
     0% {
         background-position: -100% 0;
     }
+
     100% {
         background-position: 200% 0;
     }
@@ -1308,6 +1402,7 @@ body {
     0% {
         transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
     }
+
     100% {
         transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
     }
@@ -1317,6 +1412,7 @@ body {
     0% {
         transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(0.9) translateZ(20px);
     }
+
     100% {
         transform: rotateX(-360deg) rotateY(-360deg) rotateZ(-360deg) scale(0.9) translateZ(20px);
     }
@@ -1326,22 +1422,25 @@ body {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
 }
 
 .floating-animation {
-    animation: float 6s ease-in-out infinite;
+    animation: float 0s ease-in-out infinite;
 }
 
 @keyframes float {
     0% {
         transform: translateY(0px);
     }
+
     50% {
         transform: translateY(-20px);
     }
+
     100% {
         transform: translateY(0px);
     }
@@ -1353,10 +1452,12 @@ body {
         transform: translateZ(0) scale(1.02);
         filter: brightness(1) contrast(1);
     }
+
     50% {
         transform: translateZ(10px) scale(1.03);
         filter: brightness(1.05) contrast(1.05);
     }
+
     100% {
         transform: translateZ(0) scale(1.02);
         filter: brightness(1) contrast(1);
@@ -1369,15 +1470,15 @@ body {
         max-width: 100%;
         padding: 0 15px;
     }
-    
+
     .hero-video-container {
         height: 70vh;
     }
-    
+
     .hero-title {
         font-size: 2.5rem;
     }
-    
+
     .hero-subtitle {
         font-size: 1.1rem;
     }
@@ -1388,42 +1489,42 @@ body {
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .nav {
         flex-wrap: wrap;
         justify-content: center;
     }
-    
+
     .nav-link {
         font-size: 0.9rem;
         padding: 0.5rem 1rem;
     }
-    
+
     .hero-video-container {
         height: 60vh;
     }
-    
+
     .hero-title {
         font-size: 2.2rem;
     }
-    
+
     .hero-subtitle {
         font-size: 1rem;
     }
-    
+
     .section-title {
         font-size: 2rem;
     }
-    
+
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 1.5rem;
     }
-    
+
     .category-filter {
         flex-wrap: wrap;
     }
-    
+
     .filter-btn {
         flex: 1 1 auto;
         min-width: 120px;
@@ -1437,88 +1538,88 @@ body {
     .header {
         padding: 1rem 0;
     }
-    
+
     .logo-text h1 {
         font-size: 1.5rem;
     }
-    
+
     .logo-text p {
         font-size: 0.8rem;
     }
-    
+
     .nav-link {
         font-size: 0.85rem;
         padding: 0.4rem 0.8rem;
     }
-    
+
     .hero-video-container {
         height: 50vh;
     }
-    
+
     .hero-text-top {
         top: 15%;
     }
-    
+
     .hero-title {
         font-size: 2rem;
     }
-    
+
     .hero-subtitle {
         font-size: 0.9rem;
     }
-    
+
     .section-title {
         font-size: 1.8rem;
     }
-    
+
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1rem;
     }
-    
+
     .product-card {
         padding: 1rem;
     }
-    
+
     .product-title {
         font-size: 1.1rem;
     }
-    
+
     .product-price {
         font-size: 1rem;
     }
-    
+
     .buy-now-btn {
         font-size: 0.9rem;
         padding: 0.8rem;
     }
-    
+
     .category-filter {
         gap: 0.5rem;
     }
-    
+
     .filter-btn {
         padding: 0.6rem 0.8rem;
         font-size: 0.8rem;
     }
-    
+
     .footer-content {
         grid-template-columns: 1fr;
         text-align: center;
     }
-    
+
     .vision-points {
         flex-direction: column;
     }
-    
+
     .vision-point {
         flex: 1 1 100%;
     }
-    
+
     .values-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .founder-text,
     .cofounder-text {
         padding: 1.5rem;
@@ -1529,100 +1630,100 @@ body {
     .container {
         padding: 0 10px;
     }
-    
+
     .header {
         padding: 0.8rem 0;
     }
-    
+
     .logo-text h1 {
         font-size: 1.3rem;
     }
-    
+
     .logo-text p {
         font-size: 0.7rem;
     }
-    
+
     .nav {
         gap: 0.5rem;
     }
-    
+
     .nav-link {
         font-size: 0.8rem;
         padding: 0.3rem 0.6rem;
     }
-    
+
     .hero-video-container {
         height: 40vh;
     }
-    
+
     .hero-text-top {
         top: 10%;
         padding: 0 10px;
     }
-    
+
     .hero-title {
         font-size: 1.6rem;
     }
-    
+
     .hero-subtitle {
         font-size: 0.8rem;
     }
-    
+
     .section-title {
         font-size: 1.5rem;
     }
-    
+
     .products-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    
+
     .product-image {
         height: 200px;
     }
-    
+
     .product-card {
         padding: 0.8rem;
     }
-    
+
     .product-title {
         font-size: 1rem;
     }
-    
+
     .product-price {
         font-size: 0.9rem;
     }
-    
+
     .buy-now-btn {
         font-size: 0.8rem;
         padding: 0.6rem;
     }
-    
+
     .category-filter {
         gap: 0.3rem;
     }
-    
+
     .filter-btn {
         padding: 0.5rem 0.6rem;
         font-size: 0.75rem;
     }
-    
+
     .footer-bottom {
         font-size: 0.8rem;
     }
-    
+
     .about-title {
         font-size: 1.8rem;
     }
-    
+
     .about-subtitle {
         font-size: 0.9rem;
     }
-    
+
     .story-title {
         font-size: 1.5rem;
     }
-    
+
     .admin-access-btn {
         padding: 0.6rem 1rem;
         font-size: 0.9rem;
@@ -1633,19 +1734,19 @@ body {
     .hero-title {
         font-size: 1.4rem;
     }
-    
+
     .hero-subtitle {
         font-size: 0.7rem;
     }
-    
+
     .section-title {
         font-size: 1.3rem;
     }
-    
+
     .product-image {
         height: 180px;
     }
-    
+
     .filter-btn {
         padding: 0.4rem 0.5rem;
         font-size: 0.7rem;
