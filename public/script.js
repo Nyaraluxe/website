@@ -15,7 +15,7 @@ let currentCategory = 'all';
 let currentProductForHelp = null; // Track which product the help request is for
 
 // Initialize the page
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadProducts();
     setupEventListeners();
 });
@@ -24,12 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
 async function loadProducts() {
     try {
         showLoadingState();
-        
+
         const response = await fetch('/api/products');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         allProducts = await response.json();
         displayProducts();
     } catch (error) {
@@ -41,13 +41,13 @@ async function loadProducts() {
 // Display products based on current filter
 function displayProducts() {
     if (!productsContainer) return;
-    
+
     // Clear container
     productsContainer.innerHTML = '';
-    
+
     // Get products to display
     let productsToDisplay = [];
-    
+
     if (currentCategory === 'all') {
         // Combine all products from all categories
         Object.values(allProducts.categories).forEach(categoryProducts => {
@@ -57,7 +57,7 @@ function displayProducts() {
         // Get products from specific category
         productsToDisplay = allProducts.categories[currentCategory] || [];
     }
-    
+
     // Display products or show no products message
     if (productsToDisplay.length === 0) {
         productsContainer.innerHTML = `
@@ -68,29 +68,29 @@ function displayProducts() {
         `;
         return;
     }
-    
+
     // Create product cards
     productsToDisplay.forEach(product => {
         const productCard = createProductCard(product);
         productsContainer.appendChild(productCard);
     });
-    
+
     // Add event listeners to Buy Now buttons
     document.querySelectorAll('.buy-now-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const productId = this.getAttribute('data-id');
             openEcommerceModal(productId);
         });
     });
-    
+
     // Add event listeners to Help buttons
     document.querySelectorAll('.help-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const productId = this.getAttribute('data-id');
             openHelpModal(productId);
         });
     });
-    
+
     // Initialize carousels for all products
     initializeCarousels();
 }
@@ -99,7 +99,7 @@ function displayProducts() {
 function createProductCard(product) {
     const card = document.createElement('div');
     card.className = 'product-card';
-    
+
     // Create carousel HTML if there are multiple media items
     let carouselHTML = '';
     if (product.media && product.media.length > 0) {
@@ -110,13 +110,13 @@ function createProductCard(product) {
                     <div class="carousel-container">
                         ${product.media.map((media, index) => `
                             <div class="carousel-slide ${index === 0 ? 'active' : ''}">
-                                ${isVideo(media) ? 
-                                    `<video autoplay muted loop playsinline>
+                                ${isVideo(media) ?
+                    `<video autoplay muted loop playsinline>
                                         <source src="${media}" type="video/mp4">
                                         Your browser does not support the video tag.
                                     </video>` :
-                                    `<img src="${media}" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI0QwQ0JDMiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkxhdG8iIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM0NjRDM0MiPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">`
-                                }
+                    `<img src="${media}" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI0QwQ0JDMiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkxhdG8iIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM0NjRDM0MiPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">`
+                }
                             </div>
                         `).join('')}
                     </div>
@@ -134,13 +134,13 @@ function createProductCard(product) {
             const media = product.media[0];
             carouselHTML = `
                 <div class="product-image">
-                    ${isVideo(media) ? 
-                        `<video autoplay muted loop playsinline>
+                    ${isVideo(media) ?
+                    `<video autoplay muted loop playsinline>
                             <source src="${media}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>` :
-                        `<img src="${media}" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI0QwQ0JDMiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkxhdG8iIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM0NjRDM0MiPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">`
-                    }
+                    `<img src="${media}" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI0QwQ0JDMiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkxhdG8iIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM0NjRDM0MiPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">`
+                }
                 </div>
             `;
         }
@@ -152,7 +152,7 @@ function createProductCard(product) {
             </div>
         `;
     }
-    
+
     card.innerHTML = `
         ${carouselHTML}
         <div class="product-info">
@@ -165,7 +165,7 @@ function createProductCard(product) {
             </div>
         </div>
     `;
-    
+
     return card;
 }
 
@@ -184,7 +184,7 @@ function changeSlide(card, direction) {
     const carousel = card.querySelector('.carousel-container');
     const slides = carousel.querySelectorAll('.carousel-slide');
     const indicators = card.querySelectorAll('.carousel-indicator');
-    
+
     // Find current active slide
     let currentIndex = 0;
     for (let i = 0; i < slides.length; i++) {
@@ -193,13 +193,13 @@ function changeSlide(card, direction) {
             break;
         }
     }
-    
+
     // Remove active class from current slide and indicator
     slides[currentIndex].classList.remove('active');
     if (indicators[currentIndex]) {
         indicators[currentIndex].classList.remove('active');
     }
-    
+
     // Calculate new index
     let newIndex = currentIndex + direction;
     if (newIndex >= slides.length) {
@@ -207,7 +207,7 @@ function changeSlide(card, direction) {
     } else if (newIndex < 0) {
         newIndex = slides.length - 1;
     }
-    
+
     // Add active class to new slide and indicator
     slides[newIndex].classList.add('active');
     if (indicators[newIndex]) {
@@ -220,11 +220,11 @@ function setCurrentSlide(card, index) {
     const carousel = card.querySelector('.carousel-container');
     const slides = carousel.querySelectorAll('.carousel-slide');
     const indicators = card.querySelectorAll('.carousel-indicator');
-    
+
     // Remove active class from all slides and indicators
     slides.forEach(slide => slide.classList.remove('active'));
     indicators.forEach(indicator => indicator.classList.remove('active'));
-    
+
     // Add active class to selected slide and indicator
     slides[index].classList.add('active');
     indicators[index].classList.add('active');
@@ -234,24 +234,24 @@ function setCurrentSlide(card, index) {
 function setupEventListeners() {
     // Filter buttons
     filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             // Update active button
             filterButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
-            
+
             // Update category and display products
             currentCategory = this.getAttribute('data-category');
             displayProducts();
         });
     });
-    
+
     // Ecommerce modal
-    closeEcommerceModal.addEventListener('click', function() {
+    closeEcommerceModal.addEventListener('click', function () {
         ecommerceModal.classList.remove('show');
     });
-    
+
     // Close modal when clicking outside
-    ecommerceModal.addEventListener('click', function(e) {
+    ecommerceModal.addEventListener('click', function (e) {
         if (e.target === ecommerceModal) {
             ecommerceModal.classList.remove('show');
         }
@@ -294,18 +294,18 @@ function openEcommerceModal(productId) {
             break;
         }
     }
-    
+
     if (!product) {
         alert('Product not found');
         return;
     }
-    
+
     // Set modal title
     ecommerceModalTitle.textContent = `Buy ${product.name}`;
-    
+
     // Create platform buttons
     ecommercePlatforms.innerHTML = '';
-    
+
     // Add Amazon button if link exists
     if (product.amazonLink) {
         const amazonBtn = document.createElement('a');
@@ -318,7 +318,7 @@ function openEcommerceModal(productId) {
         `;
         ecommercePlatforms.appendChild(amazonBtn);
     }
-    
+
     // Add Flipkart button if link exists
     if (product.flipkartLink) {
         const flipkartBtn = document.createElement('a');
@@ -331,7 +331,7 @@ function openEcommerceModal(productId) {
         `;
         ecommercePlatforms.appendChild(flipkartBtn);
     }
-    
+
     // Add Meesho button if link exists
     if (product.meeshoLink) {
         const meeshoBtn = document.createElement('a');
@@ -344,7 +344,7 @@ function openEcommerceModal(productId) {
         `;
         ecommercePlatforms.appendChild(meeshoBtn);
     }
-    
+
     // Show modal
     ecommerceModal.classList.add('show');
 }
@@ -360,15 +360,15 @@ function openHelpModal(productId) {
             break;
         }
     }
-    
+
     if (!product) {
         alert('Product not found');
         return;
     }
-    
+
     // Store the current product for the help request
     currentProductForHelp = product;
-    
+
     // Create help modal if it doesn't exist
     let helpModal = document.getElementById('help-modal');
     if (!helpModal) {
@@ -406,20 +406,20 @@ function openHelpModal(productId) {
             </div>
         `;
         document.body.appendChild(helpModal);
-        
+
         // Add event listeners
-        helpModal.querySelector('.close-help-modal').addEventListener('click', function() {
+        helpModal.querySelector('.close-help-modal').addEventListener('click', function () {
             helpModal.classList.remove('show');
         });
-        
-        helpModal.addEventListener('click', function(e) {
+
+        helpModal.addEventListener('click', function (e) {
             if (e.target === helpModal) {
                 helpModal.classList.remove('show');
             }
         });
-        
+
         // Handle form submission
-        helpModal.querySelector('#help-form').addEventListener('submit', function(e) {
+        helpModal.querySelector('#help-form').addEventListener('submit', function (e) {
             e.preventDefault();
             submitHelpRequest();
         });
@@ -431,10 +431,10 @@ function openHelpModal(productId) {
             ${product.sku ? `<p>SKU: ${product.sku}</p>` : ''}
         `;
     }
-    
+
     // Show modal
     helpModal.classList.add('show');
-    
+
     // Clear any previous messages
     document.getElementById('help-form-message').className = 'help-form-message';
     document.getElementById('help-form-message').textContent = '';
@@ -447,21 +447,21 @@ async function submitHelpRequest() {
     const email = document.getElementById('help-email').value;
     const query = document.getElementById('help-query').value;
     const messageDiv = document.getElementById('help-form-message');
-    
+
     // Prepare data including product information
     const requestData = {
         name: name,
         email: email,
         query: query
     };
-    
+
     // Add product information if available
     if (currentProductForHelp) {
         requestData.productId = currentProductForHelp.id;
         requestData.productName = currentProductForHelp.name;
         requestData.productSku = currentProductForHelp.sku || null;
     }
-    
+
     try {
         const response = await fetch('/api/help-request', {
             method: 'POST',
@@ -470,14 +470,14 @@ async function submitHelpRequest() {
             },
             body: JSON.stringify(requestData)
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             messageDiv.className = 'help-form-message success';
             messageDiv.textContent = result.message;
             form.reset();
-            
+
             // Hide modal after 2 seconds
             setTimeout(() => {
                 document.getElementById('help-modal').classList.remove('show');
