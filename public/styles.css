@@ -75,19 +75,29 @@ body {
     gap: 8px;
 }
 
-/* Reduce height & make logo sharper */
-.logo-image {
-    height: 65px;
-    width: auto;
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
-    opacity: 0.95;
-    mix-blend-mode: multiply;
+.logo-icon {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
-.logo-image:hover {
-    opacity: 1;
-    filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.15));
+.logo-icon:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Reduce height & make logo sharper */
+.logo-image {
+    height: 50px;
+    width: auto;
+    display: block;
+    transition: all 0.3s ease;
 }
 
 /* Adjust text placement */
