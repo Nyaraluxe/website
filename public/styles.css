@@ -76,28 +76,48 @@ body {
 }
 
 .logo-icon {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 8px 12px;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #F5F1E8 0%, #E8DCC8 100%);
+    padding: 10px 16px;
+    border-radius: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-icon::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 50px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
 }
 
 .logo-icon:hover {
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    background: linear-gradient(135deg, #F8F4EC 0%, #EDE2CC 100%);
 }
 
 /* Reduce height & make logo sharper */
 .logo-image {
-    height: 50px;
+    height: 55px;
     width: auto;
     display: block;
-    transition: all 0.3s ease;
+    filter: contrast(1.1) saturate(1.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-icon:hover .logo-image {
+    filter: contrast(1.15) saturate(1.1) brightness(1.02);
 }
 
 /* Adjust text placement */
