@@ -218,11 +218,8 @@ body {
     font-family: 'Cormorant Garamond', serif;
     font-size: 3rem;
     font-weight: 700;
-    /* Made bolder */
-    color: #000000;
-    /* Changed to black */
+    color: var(--deep-olive);
     margin-bottom: 1rem;
-    /* Removed text-shadow for cleaner look as requested */
     text-shadow: none;
     transform: translateZ(30px);
 }
